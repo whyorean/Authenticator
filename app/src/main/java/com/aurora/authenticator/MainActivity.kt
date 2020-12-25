@@ -1,12 +1,12 @@
 package com.aurora.authenticator
 
 import android.annotation.SuppressLint
-import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.webkit.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
 import com.aurora.authenticator.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -62,8 +62,13 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this@MainActivity, ResultActivity::class.java).apply {
             putExtra(AUTH_EMAIL, email)
             putExtra(AUTH_TOKEN, oauthToken)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
-        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+        startActivity(intent, ActivityOptionsCompat.makeCustomAnimation(
+                this@MainActivity,
+                android.R.anim.fade_in,
+                android.R.anim.fade_out
+        ).toBundle())
     }
 
     companion object {

@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Authenticator</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="aas_token">AAS Token</string>
+    <string name="auth_token">Auth Token</string>
+    <string name="success">Success</string>
+    <string name="failed">Failed!!</string>
 </resources>

@@ -2,7 +2,6 @@ package com.aurora.authenticator
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.widget.Toast
 import com.aurora.authenticator.databinding.ActivityResultBinding
@@ -13,6 +12,8 @@ import nl.komponents.kovenant.ui.successUi
 class ResultActivity : Activity() {
 
     private lateinit var B: ActivityResultBinding
+
+    private var lastBackPressed = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,18 +31,31 @@ class ResultActivity : Activity() {
         }
     }
 
+    override fun onBackPressed() {
+        if (lastBackPressed + 1000 > System.currentTimeMillis()) {
+            super.onBackPressed()
+        } else {
+            lastBackPressed = System.currentTimeMillis()
+            Toast.makeText(this, "Click twice to exit", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun retrieveAc2dmToken(Email: String?, oAuthToken: String?) {
         task {
             AC2DMTask().getAC2DMResponse(Email, oAuthToken)
         } successUi {
-            B.status.text = ("SUCCESS")
-            B.email.text = ("Email : " + it["Email"])
-            B.token.text = ("Token : " + it["Token"])
-            B.auth.text = ("Auth : " + it["Auth"])
-            B.name.text = ("Name : " + it["firstName"])
+            if (it.isNotEmpty()) {
+                B.viewFlipper.displayedChild = 1
+                B.name.setText(it["firstName"])
+                B.email.setText(it["Email"])
+                B.auth.setText(it["Auth"])
+                B.token.setText(it["Token"])
+            } else {
+                B.viewFlipper.displayedChild = 2
+                Toast.makeText(this, "Failed to generate AC2DM Auth Token", Toast.LENGTH_LONG).show()
+            }
         } failUi {
-            B.status.text = ("FAILED")
-            B.status.setTextColor(Color.RED)
+            B.viewFlipper.displayedChild = 2
             Toast.makeText(this, "Failed to generate AC2DM Auth Token", Toast.LENGTH_LONG).show()
         }
     }
