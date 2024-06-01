@@ -8,7 +8,6 @@ import android.webkit.CookieManager
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import com.aurora.authenticator.databinding.ActivityMainBinding
@@ -28,8 +27,7 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setup() {
-        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-        if (true) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             cookieManager.removeAllCookies(null)
             cookieManager.acceptThirdPartyCookies(B.webview)
             cookieManager.setAcceptThirdPartyCookies(B.webview, true)
