@@ -18,6 +18,13 @@ class MainActivity : AppCompatActivity() {
 
     private val cookieManager = CookieManager.getInstance()
 
+    private val JS_PROFILE_EMAIL = """
+        (function() {
+            var el = document.querySelector('[data-profile-identifier][data-email]');
+            return el ? el.getAttribute('data-email') : null;
+        })();
+    """
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         B = ActivityMainBinding.inflate(layoutInflater)
@@ -43,9 +50,11 @@ class MainActivity : AppCompatActivity() {
                 val cookieMap = Util.parseCookieString(cookies)
                 if (cookieMap.isNotEmpty() && cookieMap[AUTH_TOKEN] != null) {
                     val oauthToken = cookieMap[AUTH_TOKEN]
-                    B.webview.evaluateJavascript("(function() { return document.getElementById('profileIdentifier').innerHTML; })();") {
+                    B.webview.evaluateJavascript(JS_PROFILE_EMAIL) {
                         val email = it.replace("\"".toRegex(), "")
-                        startResultsActivity(email, oauthToken)
+                        if (email.isNotEmpty() && oauthToken != null) {
+                            startResultsActivity(email, oauthToken)
+                        }
                     }
                 }
             }

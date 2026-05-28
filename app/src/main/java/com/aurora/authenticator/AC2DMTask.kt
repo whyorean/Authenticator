@@ -1,7 +1,7 @@
 package com.aurora.authenticator
 
 import com.github.kittinunf.fuel.Fuel
-import java.util.*
+import java.util.Locale
 
 class AC2DMTask {
     @Throws(Exception::class)
@@ -22,6 +22,7 @@ class AC2DMTask {
         params["add_account"] = 1
         params["Token"] = oAuthToken
         params["callerSig"] = "38918a453d07199354f8b19af05ec6562ced5788"
+        params["droidguard_results"] = "null"
 
         val body = params.map { "${it.key}=${it.value}" }.joinToString(separator = "&")
 
